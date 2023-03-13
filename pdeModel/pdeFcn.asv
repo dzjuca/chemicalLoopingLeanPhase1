@@ -12,7 +12,9 @@ function ut = pdeFcn(t,u,Global)
 % --------------------| constants values |---------------------------------
 
     ncall   = Global.iterations;
+    Tbed  (1:Global.n1,1) = Global.Tbed;
     Tbed_2(1:Global.n2,1) = Global.Tbed;
+    index1  = Global.n1;
     id_g_f  = 'gas_freeboard'; id_s_f  = 'solid_freeboard';
 % --------------------| Variables Initial Configuration |------------------
 % ---------- non-negative values check ------------------------------------
@@ -22,43 +24,71 @@ function ut = pdeFcn(t,u,Global)
 % ---------- solid freeboard phase ----------------------------------------
                    [f1s, f2s, f3s] = assignValuesFcn(u, Global, id_s_f);
 % --------------------| Fluidized Bed |------------------------------------ 
-% ---------- bubble - ubFcn.m ---------------------------------------------  
+% ---------- bubble - ubFcn.m ---------------------------------------------
+    [ub,db,us,ue,alpha] = ubFcn(Global);    
 % ---------- concentrations dense phase vector ----------------------------
+    C_gs_dp.C_g_b = [u1b,u2b,u3b,u4b,u5b,u6b];
+    C_gs_dp.C_g_e = [u1e,u2e,u3e,u4e,u5e,u6e];
+    C_gs_dp.C_s_w = [u7w,u8w,u9w]; 
+    C_gs_dp.C_s_e = [u7e,u8e,u9e];
 % --------------------| Boundary Conditions Lean Phase |-------------------
     [f1g, f2g, f3g, f4g, f5g, f6g] = ... 
-                      bc_lp_g_Fcn(f1g, f2g, f3g, f4g, f5g, f6g, Global);
-    [f1s, f2s, f3s] = bc_lp_s_Fcn(f1s, f2s, f3s, Global);
+                bc_lp_g_Fcn(f1g, f2g, f3g, f4g, f5g, f6g, C_gs_dp, Global);
+    [f1s, f2s, f3s] = bc_lp_s_Fcn(f1s, f2s, f3s, C_gs_dp, Global);
 % ---------- concentrations Lean phase vector -----------------------------
     C_gs_lp.C_g = [f1g,f2g,f3g,f4g,f5g,f6g];
     C_gs_lp.C_s = [f1s,f2s,f3s];
 % --------------------| Mass Balance - Gas - Bubble & Wake Phase | --------
+
 % --------------------| Mass Balance - Gas - Emulsion Phase |--------------
+
 % --------------------| Mass Balance - Solid - Wake Phase |----------------
+
 % --------------------| Mass Balance - Solid - Emulsion Phase |------------
+
 % --------------------| Mass Balance - Gas   - Freeboard Phase |-----------
-    f1gt = (- lr_mbrhs1Fcn(f1g, C_gs_lp, Tbed_2, Global, 'g_lp') ... 
-            + lr_mbrhs2Fcn(f1g, Global));
-    f2gt = (- lr_mbrhs1Fcn(f2g, C_gs_lp, Tbed_2, Global, 'g_lp') ...
-            + lr_mbrhs2Fcn(f2g, Global));
-    f3gt = (- lr_mbrhs1Fcn(f3g, C_gs_lp, Tbed_2, Global, 'g_lp') ...
-            + lr_mbrhs2Fcn(f3g, Global));
-    f4gt = (- lr_mbrhs1Fcn(f4g, C_gs_lp, Tbed_2, Global, 'g_lp') ...
-            + lr_mbrhs2Fcn(f4g, Global));
-    f5gt = (- lr_mbrhs1Fcn(f5g, C_gs_lp, Tbed_2, Global, 'g_lp') ...
-            + lr_mbrhs2Fcn(f5g, Global));
-    f6gt = (- lr_mbrhs1Fcn(f6g, C_gs_lp, Tbed_2, Global, 'g_lp') ...
-            + lr_mbrhs2Fcn(f6g, Global));
+    f1gt = (- lr_mbrhs1Fcn(f1g, C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp') ... 
+            + lr_mbrhs2Fcn(f1g, Global)... 
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp', 'CH4_lp'));
+    f2gt = (- lr_mbrhs1Fcn(f2g, C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp') ...
+            + lr_mbrhs2Fcn(f2g, Global) ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp', 'CO2_lp'));
+    f3gt = (- lr_mbrhs1Fcn(f3g, C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp') ...
+            + lr_mbrhs2Fcn(f3g, Global) ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp', 'CO_lp'));
+    f4gt = (- lr_mbrhs1Fcn(f4g, C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp') ...
+            + lr_mbrhs2Fcn(f4g, Global) ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp', 'H2_lp'));
+    f5gt = (- lr_mbrhs1Fcn(f5g, C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp') ...
+            + lr_mbrhs2Fcn(f5g, Global) ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp', 'H2O_lp'));
+    f6gt = (- lr_mbrhs1Fcn(f6g, C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp') ...
+            + lr_mbrhs2Fcn(f6g, Global) ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 'g_lp', 'H2O_lp'));
 % --------------------| Mass Balance - Solid - Freeboard Phase |-----------
-    f1st = (- lr_mbrhs1Fcn(f1s, C_gs_lp, Tbed_2, Global, 's_lp'));
-    f2st = (- lr_mbrhs1Fcn(f2s, C_gs_lp, Tbed_2, Global, 's_lp'));
-    f3st = (- lr_mbrhs1Fcn(f3s, C_gs_lp, Tbed_2, Global, 's_lp'));
+    f1st = (- lr_mbrhs1Fcn(f1s, C_gs_dp, C_gs_lp, Tbed_2, Global, 's_lp') ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 's_lp', 'NiO_lp'));
+    f2st = (- lr_mbrhs1Fcn(f2s, C_gs_dp, C_gs_lp, Tbed_2, Global, 's_lp') ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 's_lp', 'Ni_lp'));
+    f3st = (- lr_mbrhs1Fcn(f3s, C_gs_dp, C_gs_lp, Tbed_2, Global, 's_lp') ...
+            + lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, Tbed_2, Global, 's_lp', 'C_lp'));
 % --------------------| Boundary Conditions 2 |----------------------------
 % ---------- z = 0 gas - bubble & wake phase ------------------------------
+    u1bt(1) = 0; u2bt(1) = 0; u3bt(1) = 0; 
+    u4bt(1) = 0; u5bt(1) = 0; u6bt(1) = 0;
 % ---------- z = 0 gas - emulsion phase -----------------------------------
+    u1et(1) = 0; u2et(1) = 0; u3et(1) = 0; 
+    u4et(1) = 0; u5et(1) = 0; u6et(1) = 0;
 % ---------- z = 0 solid - wake & emulsion phases -------------------------
+
 % ---------- z = Zg solid - wake & emulsion phase -------------------------
+
 % --------------------| Temporal Variation Vector dudt |-------------------
-    ut = [f1gt; f2gt; f3gt; f4gt; f5gt; f6gt; f1st; f2st; f3st];
+    ut = [u1bt; u2bt; u3bt; u4bt; u5bt; u6bt; ...
+          u1et; u2et; u3et; u4et; u5et; u6et; ...
+          u7wt; u8wt; u9wt; u7et; u8et; u9et; ...
+          f1gt; f2gt; f3gt; f4gt; f5gt; f6gt; ...
+          f1st; f2st; f3st];
 % --------------------| Number Calls To pdeFcn |---------------------------
     disp([ncall.getNcall, t]);
     ncall.incrementNcall();

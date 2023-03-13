@@ -12,16 +12,6 @@ function u = initialConditions(Global)
     N2in     = Global.N2in;
     C_NiO_o  = Global.carrier.C_NiO_o;
 % ----------------------------| dense phase |------------------------------
-% ---------- gas species - Bubble & Wake phases----------------------------
-    u1b = zeros(n1,1);   u2b = zeros(n1,1); u3b = zeros(n1,1);   
-    u4b = zeros(n1,1);   u5b = zeros(n1,1); u6b = zeros(n1,1);
-% ---------- gas species - Emulsion phase ---------------------------------
-    u1e = zeros(n1,1);   u2e = zeros(n1,1); u3e = zeros(n1,1);   
-    u4e = zeros(n1,1);   u5e = zeros(n1,1); u6e = zeros(n1,1);  
-% ---------- solid specie - Wake phase ------------------------------------
-    u7w = zeros(n1,1);   u8w = zeros(n1,1); u9w = zeros(n1,1);
-% ---------- solid specie - Emulsion phase --------------------------------
-    u7e = zeros(n1,1);   u8e = zeros(n1,1); u9e = zeros(n1,1);
 % ----------------------------| freboard phase |---------------------------
 % ---------- gas species - freboard phase ---------------------------------
     f1g = zeros(n2,1);     f2g = zeros(n2,1);      f3g = zeros(n2,1);
@@ -29,25 +19,7 @@ function u = initialConditions(Global)
 % ---------- solid species - freboard phase -------------------------------
     f1s = zeros(n2,1);     f2s = zeros(n2,1);      f3s = zeros(n2,1);
 % -------------------------------------------------------------------------
-% ----------------------------| dense phase |------------------------------
-% ---------- u1 = CH4 bubble & emulsion  ----------------------------------
-    u1b(:,1) = 0.00;        u1e(:,1) = 0.00;     
-% ---------- u2 = CO2 bubble & emulsion -----------------------------------
-    u2b(:,1) = 0.00;        u2e(:,1) = 0.00;     
-% ---------- u3 = CO bubble ----------------------------------------------- 
-    u3b(:,1) = 0.00;        u3e(:,1) = 0.00;    
-% ---------- u4 = H2 bubble & emulsion ------------------------------------
-    u4b(:,1) = 0.00;        u4e(:,1) = 0.00;  
-% ---------- u5 = H2O bubble & emulsion -----------------------------------
-    u5b(:,1) = 0.00;        u5e(:,1) = 0.00;    
-% ---------- u6 = N2 bubble & emulsion ------------------------------------
-    u6b(:,1) = N2in;        u6e(:,1) = N2in;      
-% ---------- u7 = NiO wake & emulsion -------------------------------------
-    u7w(:,1) = C_NiO_o;     u7e(:,1) = C_NiO_o; 
-% ---------- u8 = Ni wake & emulsion --------------------------------------
-    u8w(:,1) = 0.00;        u8e(:,1) = 0.00;   
-% ---------- u9 = C wake & emulsion ---------------------------------------
-    u9w(:,1) = 0.00;        u9e(:,1) = 0.00;     
+% ----------------------------| dense phase |------------------------------    
 % ----------------------------| freboard phase |---------------------------
 % ---------- u1 = CH4 freboard phase  -------------------------------------
     f1g(:,1) = 0.00;
@@ -60,7 +32,7 @@ function u = initialConditions(Global)
 % ---------- u5 = H2O freboard phase --------------------------------------
     f5g(:,1) = 0.00;
 % ---------- u6 = N2 freboard phase ---------------------------------------
-    f6g(:,1) = 0.00;
+    f6g(:,1) = N2in;
 % ---------- u7 = NiO freboard phase --------------------------------------
     f1s(:,1) = 0.00;
 % ---------- u8 = Ni freboard phase ---------------------------------------
@@ -69,8 +41,6 @@ function u = initialConditions(Global)
     f3s(:,1) = 0.00;
 % -------------------------------------------------------------------------
 
-u = [u1b;u2b;u3b;u4b;u5b;u6b;u1e;u2e;u3e;u4e;u5e;u6e; ...
-     u7w;u8w;u9w;u7e;u8e;u9e;                         ...
-     f1g;f2g;f3g;f4g;f5g;f6g;                         ...
-     f1s;f2s;f3s];
+    u = [f1g;f2g;f3g;f4g;f5g;f6g;f1s;f2s;f3s];
+
 end

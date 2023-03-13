@@ -2,7 +2,7 @@ function varargout = assignValuesFcn(u, Global, id)
 
     sen = Global.sen;
     gen = Global.gen;
-    n1   = Global.n1;
+    n1   = Global.n1*0;
     n2   = Global.n2;
 
 

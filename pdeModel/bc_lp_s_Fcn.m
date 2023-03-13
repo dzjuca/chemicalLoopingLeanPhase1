@@ -1,15 +1,13 @@
-function  [f1s, f2s, f3s] = bc_lp_s_Fcn(f1s, f2s, f3s, C_gs_dp, ...
-                                        Global)
+function  [f1s, f2s, f3s] = bc_lp_s_Fcn(f1s, f2s, f3s, Global)
 % -----------------------------------------------------------------
 
-    n1 = Global.n1;
+    C_NiO_o = Global.carrier.C_NiO_o;
 
 % -----------------------------------------------------------------
 
-    C_sw_dp_i = C_gs_dp.C_s_w;
-    f1s(1) = C_sw_dp_i(n1,1);
-    f2s(1) = C_sw_dp_i(n1,2);
-    f3s(1) = C_sw_dp_i(n1,3);
+    f1s(1) = C_NiO_o;
+    f2s(1) = 0.00000;
+    f3s(1) = 0.00000;
 
 % -----------------------------------------------------------------
 end

@@ -1,4 +1,4 @@
-function lr_mbrhs1 = lr_mbrhs1Fcn(Ci, C_gs_dp, C_gs_lp, T, Global, id)
+function lr_mbrhs1 = lr_mbrhs1Fcn(Ci, C_gs_lp, T, Global, id)
 % -------------------------------------------------------------------------
     %  lr_mbrhs1Fcn is a function that returns the right hand side of the
     %  mass balance equation for the lean region inside the fuel reactor.
@@ -38,7 +38,7 @@ function lr_mbrhs1 = lr_mbrhs1Fcn(Ci, C_gs_dp, C_gs_lp, T, Global, id)
     
 % -------------------------------------------------------------------------
 
-    u_g0_lp    = superficialGasVelocityFreeboardFcn(C_gs_dp,Global);
+    u_g0_lp    = Global.fDynamics.usg0;  % superficialGasVelocityFreeboardFcn(C_gs_dp,Global);
     mu_lp_g_m  = viscosityGasMixFcn(Global,T,C_g_lp);
     rho_lp_g_m = densityGasMixFcn(C_g_lp,T,Global);
     u_t        = particleTerminalVelocityFcn(mu_lp_g_m,rho_lp_g_m,Global);
@@ -48,12 +48,12 @@ function lr_mbrhs1 = lr_mbrhs1Fcn(Ci, C_gs_dp, C_gs_lp, T, Global, id)
 
     if strcmp(id,'g_lp')
 
-%         u_gs_lp = u_g0_lp./E_lp;
+%       u_gs_lp = u_g0_lp./E_lp;
         u_gs_lp = u_g0_lp;
 
     elseif strcmp(id,'s_lp')
 
-%         u_gs_lp = solidVelocityFcn(Global);
+%       u_gs_lp = solidVelocityFcn(Global);
         u_gs_lp = u_g0_lp;
 
     end
@@ -61,8 +61,8 @@ function lr_mbrhs1 = lr_mbrhs1Fcn(Ci, C_gs_dp, C_gs_lp, T, Global, id)
 % -------------------------------------------------------------------------
 
     dCi_dz    = dss012(xl,xu,n,Ci, 1);
-     lr_mbrhs1 = u_gs_lp.*dCi_dz;
-%       lr_mbrhs1 = u_gs_lp.*dCi_dz.*0;
+    lr_mbrhs1 = u_gs_lp.*dCi_dz;
+%   lr_mbrhs1 = u_gs_lp.*dCi_dz.*0;
 
 % -------------------------------------------------------------------------
 end

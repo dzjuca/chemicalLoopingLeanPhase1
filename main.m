@@ -9,7 +9,7 @@
     format shortG
 % ---------- global constants ---------------------------------------------
     Global = globalDataFcn();
-    NoN  = (1:(Global.n1*Global.Num_esp_1 + Global.n2*Global.Num_esp_2));
+    NoN  = (1:(Global.n1*Global.Num_esp_1*0 + Global.n2*Global.Num_esp_2));
 % ---------- initial condition --------------------------------------------
     u0   = initialConditions(Global);
 % ---------- time simulation (s) ------------------------------------------
@@ -25,6 +25,4 @@
     [t,u]    = ode15s(pdeModel,tout,u0,options);  
 % -----
     graphsMfgAllSpeciesFcn(t, u, Global)
-%% ---
-    graphsMf_g_lp_Fcn(t, u, Global)
 % ---------------------------| End Program |-------------------------------

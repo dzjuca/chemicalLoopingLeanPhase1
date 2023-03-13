@@ -8,7 +8,7 @@ function S = JPatternFcn(Global)
   % of the sparsity pattern
 % -------------------------------------------------------------------------
 
-  Num_esp_1 = Global.Num_esp_1;
+  Num_esp_1 = Global.Num_esp_1*0;
   Num_esp_2 = Global.Num_esp_2;
   index1  = Global.n1;
   index2  = Global.n2;
