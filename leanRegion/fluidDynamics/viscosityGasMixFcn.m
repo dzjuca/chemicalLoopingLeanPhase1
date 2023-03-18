@@ -54,4 +54,6 @@ function viscosityGasMix = viscosityGasMixFcn(Global, T, Cgas )
     
         viscosityGasMix = sum(mum_gas, 2);
     % -------------------------------------------------------------------------
+
+    %% viscosityGasMix(:,1) = 1.8e-4;
     end

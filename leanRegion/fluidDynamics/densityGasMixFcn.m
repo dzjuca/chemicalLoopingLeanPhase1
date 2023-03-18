@@ -16,4 +16,7 @@ function densityGasMix = densityGasMixFcn(Cgas, T, Global)
 
     densityGasMix = (P.*sum(y_i.* mMolar,2)./(R.*T))./1000; % ==== g/cm3
 
+    % ---
+    %% densityGasMix(:,1) = 1.2e-3;
+
 end

@@ -10,6 +10,7 @@ function Global = globalDataFcn()
       Global.Tbed    = (623 + 273.15);% Temperature                     [K]
       Global.g       = 981.0;         % Gravity                     [cm/s2]
       Global.Num_esp_1 = 18;          % number of species               [#]
+      
       Global.Num_esp_2 = 9;           % number of species               [#]
       Global.gen     = 6;             % gas species number              [#]
       Global.sen     = 3;             % solid species number            [#]
@@ -22,7 +23,7 @@ function Global = globalDataFcn()
       Global.k_factor = 0;           %   k - factor correction           [] 
 % ----------| Flow rate and concentration of species |---------------------
 % ----- total feed flow in the reactor's bottom ---------------------------
-      Global.QT_in = 1200;            %  condicion_1           [STP ml/min]
+      Global.QT_in = 1200*2.2;            %  condicion_1           [STP ml/min] ======> modificado para no tener problemas con u_t
 % ----- flow feed ratio for each specie -----------------------------------
       CH4in_rat = 50.0;               % CH4                             [%]
       N2in_rat  = 50.0;               % N2                              [%]
@@ -59,15 +60,19 @@ function Global = globalDataFcn()
                               % minimum fluidization velocity        [cm/s] 
       Global.fDynamics.fw   = 0.15;% fraction of wake in bubbles         []
       Global.fDynamics.Emf  = 0.45;% minimum fluidization porosity       []
+      Global.fDynamics.a_u0 = 7;   %                                  [s-1]
+      Global.fDynamics.f_d  = 0.3; %                                     []
+      Global.fDynamics.Pe_ax = 6;  % Axial Peclet Number                 []
 % ---------- Carrier Data -------------------------------------------------
       Global.carrier.R       = 8.314472;  % Universal Gas Constant [J/molK] 
       Global.carrier.a0      = 1020000;   % specific surface area   [cm2/g]
       Global.carrier.C_NiO_o = 0.14;      % NiO concentration    [gNiO/g-c]=== 0.08
-      Global.carrier.load    = 300;   % catalyst weight                 [g]
+      Global.carrier.load    = 300;       % catalyst weight             [g]
       Global.carrier.dp          = 0.014; % particle diameter          [cm]
       Global.carrier.bulkDensity = 1.1;   % particle density        [g/cm3]
       Global.carrier.density     = 0.785; % particle density        [g/cm3]
       Global.carrier.sphericity  = 0.95;  % particle sphericity          []
+      Global.carrier.rho_s       = 3.8; %1.1;   % particle density        [g/cm3]
 % ---------- molar mass for each specie -----------------------------------
       Global.MMASS(1) = 16.0426;      % - CH4                       [g/mol]
       Global.MMASS(2) = 44.0090;      % - CO2                       [g/mol]

@@ -1,4 +1,4 @@
-function lr_mbrhs3 = lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, T_lp, Global, id1, id2)
+function lr_mbrhs3 = lr_mbrhs3Fcn(C_gs_lp, T_lp, Global, id1, id2)
 % -------------------------------------------------------------------------
     %  lr_mbrhs1Fcn is a function that returns the right hand side of the
     %  mass balance equation for the lean region inside the fuel reactor.
@@ -11,22 +11,19 @@ function lr_mbrhs3 = lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, T_lp, Global, id1, id2)
 % -------------------------------------------------------------------------
  
     Dcat    = Global.carrier.bulkDensity;
+    u_g0    = Global.fDynamics.usg0;
     C_g_lp  = C_gs_lp.C_g;
     C_s_lp  = C_gs_lp.C_s;
     kinetic = kineticFcn(C_g_lp, C_s_lp, T_lp, Global, id2);
 
 % -------------------------------------------------------------------------
 
-
-    u_g0_lp    = superficialGasVelocityFreeboardFcn(C_gs_dp,Global);
-    mu_lp_g_m  = viscosityGasMixFcn(Global,T_lp,C_g_lp);
-    rho_lp_g_m = densityGasMixFcn(C_g_lp,T_lp,Global);
-    u_t        = particleTerminalVelocityFcn(mu_lp_g_m,rho_lp_g_m,Global);
-    G_sat      = saturatedFluxSolidsFcn(u_t, u_g0_lp, rho_lp_g_m);         % ================> revisar dimensiones 
-    f_s        = freeboardSolidFractionFcn(u_g0_lp, G_sat, u_t, Global);
-    E_lp       = 1 - f_s;
-
-
+    mu_g  = viscosityGasMixFcn(Global, T_lp, C_g_lp);
+    rho_g = densityGasMixFcn(C_g_lp, T_lp, Global);
+    u_t   = particleTerminalVelocityFcn(mu_g, rho_g, Global, 'mod_2');
+    G_sat = saturatedFluxSolidsFcn(u_t, u_g0, rho_g);        
+    f_s   = freeboardSolidFractionFcn(G_sat, rho_g,  mu_g, u_t, Global);
+    E_lp  = 1 - f_s;
 
 % -------------------------------------------------------------------------
 
@@ -44,6 +41,7 @@ function lr_mbrhs3 = lr_mbrhs3Fcn(C_gs_dp, C_gs_lp, T_lp, Global, id1, id2)
         lr_mbrhs3 = 0;
 
     end
-   % lr_mbrhs3 = lr_mbrhs3.*0;
+% -------------------------------------------------------------------------
+% lr_mbrhs3 = lr_mbrhs3.*0;   %============> Para diseno 
 % -------------------------------------------------------------------------
 end

@@ -1,4 +1,4 @@
-function graphsMfgAllSpeciesFcn(t, u, Global)
+function graphs_mf_g_lp_Fcn(t, u, Global)
 % -------------------------------------------------------------------------
        % graphs_C_g_b_Fcn function 
        % ----------------------------| input |-----------------------------
@@ -24,6 +24,7 @@ function graphsMfgAllSpeciesFcn(t, u, Global)
     f5g = zeros(index1,index2); f6g = zeros(index1,index2);
 
 % -------------------------------------------------------------------------
+
     for j=1:index1 
         for i=1:index2, f1g(j,i)=u(j,i+0*index2);     end
         for i=1:index2, f2g(j,i)=u(j,i+1*index2);     end
@@ -46,27 +47,28 @@ function graphsMfgAllSpeciesFcn(t, u, Global)
 
 % -------------------------------------------------------------------------
 
-% -------------------------------------------------------------------------
     TAG1 = {'Molar Fraction $(CH_{4}, CO_{2}, H_{2}O)$',
             'Molar Fraction $(CO, H_{2})$',
             'Molar Fraction $x_{i}$'}; 
-    TAG3 = {'x_Time','x_Space'};
-    TAG5 = {'graphs/MolarFraction'};
+    TAG3 = {'mf_Time','mf_Space'};
+    TAG5 = {'graphs/MolarFraction/leanPhase'};
+
 % -------------------------------------------------------------------------
 
     FZ1 = 14; MZ1 = 5; XLFZ = 14; YLFZ = 14; LFZ = 5;
 
 % --------------------------| Concentration vs time |----------------------
 
-    id = exist('graphs/MolarFraction','file');
+    id = exist('graphs/MolarFraction/leanPhase','file');
     if id == 7
         dir = strcat(pwd,'/',TAG5{1},'/',TAG3{1},'MolarFraction','Gas');
     else
-        mkdir('graphs/MolarFraction')
+        mkdir('graphs/MolarFraction/leanPhase')
         dir = strcat(pwd,'/',TAG5{1},'/',TAG3{1},'MolarFraction','Gas');
     end
 
     % ---------------------------------------------------------------------
+
     fig1 = figure;
         set(fig1,'Units','centimeters',              ...
         'PaperPosition',[0 0 15 15],                 ...
@@ -77,7 +79,9 @@ function graphsMfgAllSpeciesFcn(t, u, Global)
         'TickLabelInterpreter','latex');
 
     set(fig1, 'Color', 'w') 
+
     % ---------------------------------------------------------------------
+
     hold on
 
         plot(tmin,x1(:,n2)','ko-','MarkerSize',MZ1); % CH4
@@ -89,31 +93,28 @@ function graphsMfgAllSpeciesFcn(t, u, Global)
         ylabel(TAG1{3},'FontSize',YLFZ,'interpreter','Latex')
         ylim([0 1])
 
-
         xlabel('$time\left( {min} \right)$','FontSize',XLFZ,      ...
         'interpreter','Latex')
+        max3 = max(tmin); 
+        xlim([0 max3])
 
         ley1 = {'$C{H_4}$','$C{O_2}$','$CO$','${H_2}$','${H_2}O$'};
         legend(ley1,'Interpreter','Latex','Location','north',   ...
         'Orientation','horizontal','FontSize',LFZ)
 
-
-        max3 = max(tmin); 
-        xlim([0 max3])
-
     hold off
     print(fig1,'-dpdf','-r500',dir)
     close all
-    % -------------------------------------------------------------------------
-    % --------------------------| Concentration vs space |---------------------
-    id = exist('graphs/MolarFraction','file');
+% -------------------------------------------------------------------------
+% --------------------------| Concentration vs space |---------------------
+    id = exist('graphs/MolarFraction/leanPhase','file');
     if id == 7
         dir = strcat(pwd,'/',TAG5{1},'/',TAG3{2},'MolarFraction','Gas');
     else
-        mkdir('graphs/MolarFraction')
+        mkdir('graphs/MolarFraction/leanPhase')
         dir = strcat(pwd,'/',TAG5{1},'/',TAG3{2},'MolarFraction','Gas');
     end
-    % ---------------------------------------------------------------------
+% ---------------------------------------------------------------------
     fig2 = figure;
 
     set(fig2,'Units','centimeters',                       ...
@@ -145,7 +146,7 @@ function graphsMfgAllSpeciesFcn(t, u, Global)
 
         ylabel(TAG1{3},'FontSize',YLFZ,'interpreter','Latex') 
 
-        ylim([0 0.6])
+        ylim([0 1])
 
         max2 = max(z2); 
         xlim([0 max2])

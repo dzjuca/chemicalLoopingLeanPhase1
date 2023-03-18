@@ -1,15 +1,20 @@
-function D_ax = axialDispersionCoefficientFcn()
-
-% D_ax = axial Dispersion CoefficientFcn [cm2/s]
-
-
-
-    % 0.01 a 0.1 m^2/s
-
-%     D_ax = 0.05*100*100;
-    D_ax = 0.1;
-
+function D_ax = axialDispersionCoefficientFcn(Global)
+% -------------------------------------------------------------------------
+ u_sg  = Global.fDynamics.usg0;
+ dp    = Global.carrier.dp;
+ Pe_ax = Global.fDynamics.Pe_ax;
+% -------------------------------------------------------------------------
+    D_ax = dp.*u_sg./Pe_ax;
+    D_ax(isnan(D_ax)) = 0;
+    D_ax(isinf(D_ax)) = 0;
+% -------------------------------------------------------------------------
+%    D_ax      = 0.01; % ======> valor de diseño
+%    D_ax(:,1) = 0.28;
+% -------------------------------------------------------------------------
 end
+
+        
+        
 
 
 
